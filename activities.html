@@ -1,1 +1,422 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กิจกรรม/ผลงาน - คณะบริหารธุรกิจ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #bcd8ee 0%, #d9ebf7 35%, #f2f8fc 70%, #ffffff 100%);
+            overflow-x: hidden;
+            position: relative;
+            color: #1c2e40;
+            perspective: 1000px; /* เพิ่มมิติเชิงลึกสำหรับการหมุน 3D */
+        }
+
+        /* --- Layers: Skyscraper Silhouette (ตึกระฟ้าขนาดยักษ์สูงเด่นด้านหลัง เกือบเต็มจอ) --- */
+        .skyscraper-bg {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 85vh;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="none"><path d="M0,800 L0,480 L60,480 L60,320 L130,320 L130,510 L190,510 L190,210 L290,210 L290,580 L350,580 L350,390 L420,390 L420,250 L510,250 L510,540 L590,540 L590,310 L670,310 L670,160 L780,160 L780,510 L850,510 L850,360 L940,360 L940,220 L1030,220 L1030,550 L1110,550 L1110,310 L1200,310 L1200,800 Z" fill="rgba(30, 77, 123, 0.02)"/><path d="M100,800 L100,550 L180,550 L180,420 L250,420 L250,650 L320,650 L320,310 L410,310 L410,610 L490,610 L490,420 L570,420 L570,290 L680,290 L680,590 L750,590 L750,410 L820,410 L820,280 L930,280 L930,590 Z" fill="rgba(30, 77, 123, 0.015)"/></svg>');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: bottom center;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.9;
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 15%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 15%, rgba(0,0,0,0) 100%);
+        }
+
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* --- CSS 3D Spinning Symbols (สัญลักษณ์การเงินหมุนอยู่กับที่อย่างหรูหรา) --- */
+        .premium-symbol {
+            position: fixed;
+            z-index: 3;
+            color: rgba(30, 77, 123, 0.12); /* สีฟ้าครามกึ่งโปร่งใสดูเรียบหรู */
+            font-weight: bold;
+            pointer-events: none;
+            user-select: none;
+            transform-style: preserve-3d;
+            animation: spinAndFloat 8s infinite linear;
+        }
+
+        /* กำหนดตำแหน่งกระจายตัวเพื่อไม่ให้บดบังเนื้อหาตรงกลาง */
+        .sym-1 { top: 18%; left: 8%; font-size: 3.5rem; animation-duration: 10s; }
+        .sym-2 { top: 25%; right: 10%; font-size: 3rem; animation-duration: 12s; animation-delay: -2s; }
+        .sym-3 { bottom: 20%; left: 6%; font-size: 4rem; animation-duration: 14s; animation-delay: -5s; }
+        .sym-4 { bottom: 28%; right: 7%; font-size: 3.2rem; animation-duration: 11s; animation-delay: -3s; }
+        .sym-5 { top: 50%; left: 12%; font-size: 2.5rem; animation-duration: 9s; animation-delay: -7s; }
+
+        /* เอฟเฟกต์หมุนรอบตัวเอง 3 มิติ + ลอยขึ้นลงเบา ๆ แบบไร้น้ำหนัก */
+        @keyframes spinAndFloat {
+            0% {
+                transform: translateY(0px) rotateY(0deg);
+            }
+            50% {
+                transform: translateY(-15px) rotateY(180deg);
+                color: rgba(30, 77, 123, 0.18); /* เพิ่มความสว่างขึ้นเล็กน้อยตอนหมุนมาตรงกลาง */
+            }
+            100% {
+                transform: translateY(0px) rotateY(360deg);
+            }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(28, 46, 64, 0.1);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e4d7b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #3a5169;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a.active, .nav-links a:hover {
+            color: #1e4d7b;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #1e4d7b;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 1200px;
+            margin: 120px auto 40px auto;
+            min-height: calc(100vh - 200px);
+        }
+
+        .act-wrapper {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(28, 46, 64, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(30, 77, 123, 0.12);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .section-title {
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(to right, #1e4d7b, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Cards Grid */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .act-card {
+            background: #ffffff;
+            border: 1px solid rgba(28, 46, 64, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(30, 77, 123, 0.06);
+        }
+
+        .act-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(58, 123, 213, 0.35);
+            box-shadow: 0 10px 25px rgba(30, 77, 123, 0.15);
+        }
+
+        .act-img {
+            height: 200px;
+            width: 100%;
+            background: linear-gradient(135deg, #eaf3fb, #cfe4f5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e4d7b;
+            overflow: hidden;
+        }
+
+        .act-img i {
+            font-size: 50px;
+        }
+
+        .act-info {
+            padding: 20px;
+        }
+
+        .act-tag {
+            background: rgba(30, 77, 123, 0.1);
+            color: #1e4d7b;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .act-info h3 {
+            font-size: 18px;
+            color: #1c2e40;
+            margin-bottom: 8px;
+        }
+
+        .act-info p {
+            font-size: 14px;
+            color: #5b6b7c;
+            line-height: 1.5;
+        }
+
+        /* Footer Controls */
+        .footer-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #1e4d7b;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #163a5f;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(30, 77, 123, 0.25);
+        }
+
+        .btn-secondary {
+            background: rgba(30, 77, 123, 0.08);
+            color: #1e4d7b;
+            border: 1px solid rgba(30, 77, 123, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(30, 77, 123, 0.15);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .skyscraper-bg {
+                height: 55vh;
+            }
+            .premium-symbol {
+                display: none; /* ซ่อนสัญลักษณ์หมุนบนมือถือเพื่อลดความอึดอัดของจอ */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- เลเยอร์ที่ 1: ตึกระฟ้าขนาดยักษ์อยู่กับที่ด้านล่าง -->
+    <div class="skyscraper-bg"></div>
+
+    <!-- เลเยอร์ที่ 2: สัญลักษณ์การเงินหรูหรา หมุนรอบตัวเองแบบ 3D อยู่กับที่ด้วย CSS -->
+    <div class="premium-symbol sym-1">฿</div>
+    <div class="premium-symbol sym-2">📈</div>
+    <div class="premium-symbol sym-3">$</div>
+    <div class="premium-symbol sym-4">🪙</div>
+    <div class="premium-symbol sym-5">📊</div>
+
+    <!-- เลเยอร์ที่ 3: เฉพาะหิมะ/ละอองแสงตกดิ่งลงล่างอย่างเดียว (ไม่มีอะไรลอยขึ้นแล้ว) -->
+    <canvas id="snow-canvas"></canvas>
+
+    <nav>
+        <div class="logo">Business Portfolio</div>
+        <ul class="nav-links">
+            <li><a href="index.html">หน้าแรก</a></li>
+            <li><a href="personal.html">ประวัติส่วนตัว</a></li>
+            <li><a href="education.html">ประวัติการศึกษา</a></li>
+            <li><a href="activities.html" class="active">กิจกรรม/ผลงาน</a></li>
+            <li><a href="contact.html">ช่องทางติดต่อ</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="act-wrapper">
+            <h2 class="section-title">Activities & Projects</h2>
+            
+            <div class="activity-grid">
+                <!-- กิจกรรมที่ 1 -->
+                <div class="act-card">
+                    <div class="act-img">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="act-info">
+                        <span class="act-tag">Open House</span>
+                        <h3>โครงการเปิดบ้านวิชาการ มหาวิทยาลัย</h3>
+                        <p>เข้าร่วมศึกษาหลักสูตรคณะบริหารธุรกิจ ณ งาน Open House มหาวิทยาลัยศรีนครินทรวิโรฒ เพื่อเรียนรู้ทิศทางธุรกิจสมัยใหม่และการทำการตลาดระดับนานาชาติ</p>
+                    </div>
+                </div>
+
+                <!-- กิจกรรมที่ 2 -->
+                <div class="act-card">
+                    <div class="act-img">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="act-info">
+                        <span class="act-tag">Business & Sales</span>
+                        <h3>ประธานฝ่ายขาย โครงงานเศรษฐกิจสร้างสรรค์</h3>
+                        <p>ร่วมทีมจัดโครงการขาย "ขนมครกสร้างสรรค์หน้าฟิวชั่น" ในเทศกาลโรงเรียน วางแผนจัดการด้านงบประมาณ กำไรขาดทุน และวิเคราะห์พฤติกรรมลูกค้า</p>
+                    </div>
+                </div>
+
+                <!-- กิจกรรมที่ 3 -->
+                <div class="act-card">
+                    <div class="act-img">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="act-info">
+                        <span class="act-tag">Training & Award</span>
+                        <h3>อบรมทักษะการตลาดดิจิทัลยุคใหม่</h3>
+                        <p>ได้รับเกียรติบัตรผ่านการอบรมทักษะด้านการโฆษณาออนไลน์เบื้องต้นด้วยระบบ AI และการเขียนสคริปต์ปิดการขายโดยไม่เสียค่าโฆษณา</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-controls">
+            <a href="education.html" class="btn btn-secondary"><i class="fas fa-chevron-left" style="margin-right: 8px;"></i> ย้อนกลับ</a>
+            <a href="contact.html" class="btn btn-primary">ถัดไป <i class="fas fa-chevron-right" style="margin-left: 8px;"></i></a>
+        </div>
+    </div>
+
+    <!-- Script สำหรับเอฟเฟกต์หิมะ/ละอองสว่างตกดิ่งลงอย่างเดียวแบบนวลตา -->
+    <script>
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // มีแต่ละอองหิมะ/ละอองแสงสีฟ้าอ่อน ตกจากฟ้าลงมาอย่างนุ่มนวล
+        const numFlakes = 50; 
+        const flakes = [];
+
+        for (let i = 0; i < numFlakes; i++) {
+            flakes.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 2.5 + 1,
+                speedY: Math.random() * 0.8 + 0.3, // ตกช้าๆ อย่างนุ่มนวล
+                speedX: Math.random() * 0.4 - 0.2,
+                opacity: Math.random() * 0.3 + 0.1
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = 0; i < numFlakes; i++) {
+                const f = flakes[i];
+                
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(30, 77, 123, ${f.opacity})`;
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+                ctx.fill();
+
+                f.y += f.speedY;
+                f.x += f.speedX;
+
+                // เมื่อหิมะตกเลยขอบจอ ให้กลับไปเริ่มใหม่ด้านบน
+                if (f.y > height) {
+                    f.y = -10;
+                    f.x = Math.random() * width;
+                }
+            }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>
 
