@@ -462,7 +462,74 @@
   <p class="contact-note">ขอบคุณที่แวะมาชมพอร์ตโฟลิโอของฉันนะคะ หากมีคำถามเกี่ยวกับผลงานหรือการสมัครเรียน ยินดีตอบทุกข้อความค่ะ 🌨️</p>
 </main>
 
-<footer class="site-end">© 2569 [ชื่อ-นามสกุล] · พอร์ตโฟลิโอสำหรับสมัครเข้าศึกษาคณะบริหารธุรกิจ</footer>
+<!-- ================= เริ่มต้น: ปุ่มนำทางพร้อม CSS สำหรับหน้า contact.html ================= -->
+<style>
+  .nav-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin: 60px auto 40px;
+    width: 100%;
+    max-width: 520px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+  }
+  .btn-nav {
+    flex: 1;
+    text-align: center;
+    padding: 14px 30px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: #D8E9F5;
+    border: 1px solid rgba(216, 233, 245, 0.25);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  .btn-secondary::before { content: '←'; font-weight: bold; transition: transform 0.2s; }
+  .btn-secondary:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
+    border-color: rgba(216, 233, 245, 0.6);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 0 15px rgba(216, 233, 245, 0.1);
+  }
+  .btn-secondary:hover::before { transform: translateX(-4px); }
+  
+  .btn-home {
+    background: linear-gradient(135deg, #3A6EA5 0%, #2A527C 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(58, 110, 165, 0.25);
+  }
+  .btn-home:hover {
+    transform: translateY(-4px);
+    background: #4a82be;
+    box-shadow: 0 12px 28px rgba(58, 110, 165, 0.45), 0 0 20px rgba(58, 110, 165, 0.2);
+  }
+  @media (max-width: 480px) {
+    .nav-button-container { gap: 12px; margin-top: 45px; margin-bottom: 25px; }
+    .btn-nav { padding: 12px 20px; font-size: 0.88rem; }
+  }
+</style>
+
+<div class="nav-button-container">
+  <a href="activities.html" class="btn-nav btn-secondary">ย้อนกลับ</a>
+  <a href="index.html" class="btn-nav btn-home">กลับหน้าหลัก</a>
+</div>
+<!-- ================= สิ้นสุด: ปุ่มนำทางสำหรับหน้า contact.html ================= -->
+
 
 <script>
   // ---------- Mobile nav toggle ----------
