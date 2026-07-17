@@ -1,430 +1,660 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หน้าแรก - คณะบริหารธุรกิจ Portfolio</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>หน้าแรก | พอร์ตโฟลิโอ คณะบริหารธุรกิจ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night-top: #030B18;
+    --night-mid: #0B2545;
+    --night-low: #163A63;
+    --steel: #3A6EA5;
+    --frost: #D8E9F5;
+    --ice: #F4F9FD;
+    --white: #FFFFFF;
+    --gold: #F3E3B8;
+    --silver: #A9BFD6;
+  }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(180deg, #bcd8ee 0%, #d9ebf7 35%, #f2f8fc 70%, #ffffff 100%);
-            overflow-x: hidden;
-            position: relative;
-            color: #1c2e40;
-            perspective: 1000px; /* มิติเชิงลึกสำหรับหมุน 3D */
-        }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior: smooth; }
 
-        /* --- Layers: Skyscraper Silhouette (ตึกระฟ้าขนาดยักษ์สูงเด่นด้านหลัง เกือบเต็มจอ) --- */
-        .skyscraper-bg {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 85vh;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="none"><path d="M0,800 L0,480 L60,480 L60,320 L130,320 L130,510 L190,510 L190,210 L290,210 L290,580 L350,580 L350,390 L420,390 L420,250 L510,250 L510,540 L590,540 L590,310 L670,310 L670,160 L780,160 L780,510 L850,510 L850,360 L940,360 L940,220 L1030,220 L1030,550 L1110,550 L1110,310 L1200,310 L1200,800 Z" fill="rgba(30, 77, 123, 0.02)"/><path d="M100,800 L100,550 L180,550 L180,420 L250,420 L250,650 L320,650 L320,310 L410,310 L410,610 L490,610 L490,420 L570,420 L570,290 L680,290 L680,590 L750,590 L750,410 L820,410 L820,280 L930,280 L930,590 Z" fill="rgba(30, 77, 123, 0.015)"/></svg>');
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            background-position: bottom center;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.9;
-            mask-image: linear-gradient(to top, rgba(0,0,0,1) 15%, rgba(0,0,0,0) 100%);
-            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 15%, rgba(0,0,0,0) 100%);
-        }
+  body{
+    font-family: 'Prompt', sans-serif;
+    background: var(--night-top);
+    color: var(--frost);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
 
-        #snow-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  }
 
-        /* --- CSS 3D Spinning Symbols (สัญลักษณ์การเงินหมุนอยู่กับที่อย่างหรูหรา) --- */
-        .premium-symbol {
-            position: fixed;
-            z-index: 3;
-            color: rgba(30, 77, 123, 0.12); /* สีฟ้าครามกึ่งโปร่งใส */
-            font-weight: bold;
-            pointer-events: none;
-            user-select: none;
-            transform-style: preserve-3d;
-            animation: spinAndFloat 8s infinite linear;
-        }
+  /* ================= SKY ================= */
+  .sky{
+    position: fixed;
+    inset: 0;
+    z-index: -6;
+    background: linear-gradient(180deg, var(--night-top) 0%, var(--night-mid) 55%, var(--night-low) 100%);
+    background-size: 100% 220%;
+    animation: skyDrift 26s ease-in-out infinite;
+  }
+  @keyframes skyDrift{
+    0%,100%{ background-position: 0% 0%; }
+    50%{ background-position: 0% 30%; }
+  }
 
-        /* วางตำแหน่งไอคอนรอบจอ */
-        .sym-1 { top: 18%; left: 8%; font-size: 3.5rem; animation-duration: 10s; }
-        .sym-2 { top: 25%; right: 10%; font-size: 3rem; animation-duration: 12s; animation-delay: -2s; }
-        .sym-3 { bottom: 20%; left: 6%; font-size: 4rem; animation-duration: 14s; animation-delay: -5s; }
-        .sym-4 { bottom: 28%; right: 7%; font-size: 3.2rem; animation-duration: 11s; animation-delay: -3s; }
-        .sym-5 { top: 50%; left: 12%; font-size: 2.5rem; animation-duration: 9s; animation-delay: -7s; }
+  .stars{
+    position: fixed;
+    inset: 0;
+    z-index: -5;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 18%, rgba(255,255,255,.9), transparent 60%),
+      radial-gradient(1px 1px at 28% 8%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(1.5px 1.5px at 44% 26%, rgba(255,255,255,.8), transparent 60%),
+      radial-gradient(1px 1px at 62% 12%, rgba(255,255,255,.6), transparent 60%),
+      radial-gradient(1.5px 1.5px at 77% 22%, rgba(255,255,255,.9), transparent 60%),
+      radial-gradient(1px 1px at 91% 9%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(1.5px 1.5px at 8% 34%, rgba(255,255,255,.6), transparent 60%),
+      radial-gradient(1px 1px at 53% 38%, rgba(255,255,255,.7), transparent 60%);
+    opacity: 0.8;
+    animation: twinkle 5s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{ 0%{ opacity: .5; } 100%{ opacity: 1; } }
 
-        @keyframes spinAndFloat {
-            0% {
-                transform: translateY(0px) rotateY(0deg);
-            }
-            50% {
-                transform: translateY(-15px) rotateY(180deg);
-                color: rgba(30, 77, 123, 0.18);
-            }
-            100% {
-                transform: translateY(0px) rotateY(360deg);
-            }
-        }
+  .moon{
+    position: fixed;
+    top: 12%;
+    right: 12%;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #FFFDF6, var(--gold) 70%);
+    box-shadow: 0 0 70px 20px rgba(243,227,184,0.35), 0 0 140px 60px rgba(243,227,184,0.15);
+    z-index: -5;
+    animation: moonGlow 6s ease-in-out infinite;
+  }
+  @keyframes moonGlow{
+    0%,100%{ box-shadow: 0 0 70px 20px rgba(243,227,184,0.35), 0 0 140px 60px rgba(243,227,184,0.15); }
+    50%{ box-shadow: 0 0 90px 30px rgba(243,227,184,0.5), 0 0 170px 80px rgba(243,227,184,0.22); }
+  }
 
-        /* --- Navigation Menu --- */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(28, 46, 64, 0.1);
-            z-index: 100;
-        }
+  /* ================= SKYLINE ================= */
+  .skyline{
+    position: fixed;
+    left: 0; right: 0;
+    bottom: 0;
+    height: 62vh;
+    z-index: -4;
+    pointer-events: none;
+  }
+  .layer{
+    position: absolute;
+    left: -6%;
+    right: -6%;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 2vw;
+    transition: transform 0.6s ease-out;
+    will-change: transform;
+  }
+  .layer-far{ opacity: 0.55; filter: blur(0.4px); }
+  .layer-mid{ opacity: 0.8; }
+  .layer-near{ opacity: 1; }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1e4d7b;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+  .bldg{
+    position: relative;
+    background: var(--bc, var(--night-low));
+    background-image:
+      linear-gradient(var(--bc, var(--night-low)), var(--bc, var(--night-low))),
+      repeating-linear-gradient(to right, transparent 0 9px, rgba(243,227,184,var(--wo,.35)) 9px 12px),
+      repeating-linear-gradient(to bottom, transparent 0 13px, rgba(243,227,184,var(--wo,.35)) 13px 16px);
+    background-blend-mode: normal, screen, screen;
+  }
+  .bldg::after{
+    content:'';
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(to right, transparent 0 9px, rgba(255,251,235,0.9) 9px 12px),
+      repeating-linear-gradient(to bottom, transparent 0 13px, rgba(255,251,235,0.9) 13px 16px);
+    background-blend-mode: screen;
+    opacity: 0;
+    animation: flicker 4.5s ease-in-out infinite;
+    animation-delay: var(--fd, 0s);
+    mix-blend-mode: screen;
+  }
+  @keyframes flicker{
+    0%, 40%{ opacity: 0; }
+    45%{ opacity: 0.55; }
+    55%{ opacity: 0.15; }
+    62%{ opacity: 0.6; }
+    100%{ opacity: 0; }
+  }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
+  .spire{
+    position:absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    width: 3px;
+    background: var(--bc, var(--night-low));
+  }
+  .spire::before{
+    content:'';
+    position:absolute;
+    top:-6px; left:50%;
+    transform: translateX(-50%);
+    width:6px; height:6px;
+    border-radius:50%;
+    background: var(--gold);
+    box-shadow: 0 0 8px 2px rgba(243,227,184,.8);
+  }
 
-        .nav-links a {
-            color: #3a5169;
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.3s;
-            position: relative;
-            padding: 5px 0;
-        }
+  /* ---- Neon accents ---- */
+  .neon-stripe{
+    position:absolute;
+    top: 12%;
+    bottom: 12%;
+    width: 3px;
+    background: var(--nc, #7CE7FF);
+    box-shadow: 0 0 6px 1.5px var(--nc, #7CE7FF), 0 0 16px 4px var(--nc, #7CE7FF);
+    animation: neonPulse 3.2s ease-in-out infinite;
+    animation-delay: var(--nd, 0s);
+  }
+  .neon-stripe.left{ left: 10%; }
+  .neon-stripe.right{ right: 10%; }
 
-        .nav-links a.active, .nav-links a:hover {
-            color: #1e4d7b;
-        }
+  .neon-band{
+    position:absolute;
+    left: 14%;
+    right: 14%;
+    height: 3px;
+    background: var(--nc, #FF7FBF);
+    box-shadow: 0 0 6px 1.5px var(--nc, #FF7FBF), 0 0 16px 4px var(--nc, #FF7FBF);
+    animation: neonPulse 2.6s ease-in-out infinite;
+    animation-delay: var(--nd, 0s);
+  }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: #1e4d7b;
-            transition: 0.3s;
-        }
+  .neon-sign{
+    position:absolute;
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 62%;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--nc, #FFC46B);
+    box-shadow: 0 0 8px 2px var(--nc, #FFC46B), 0 0 22px 6px var(--nc, #FFC46B);
+    animation: neonPulse 3.6s ease-in-out infinite;
+    animation-delay: var(--nd, 0s);
+  }
 
-        .nav-links a:hover::after {
-            width: 100%;
-        }
+  @keyframes neonPulse{
+    0%, 100%{ opacity: 0.95; filter: brightness(1); }
+    45%{ opacity: 0.55; filter: brightness(0.85); }
+    50%{ opacity: 1; filter: brightness(1.2); }
+    78%{ opacity: 0.7; }
+  }
 
-        /* --- Hero Section & Container --- */
-        .container {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 1000px;
-            margin: 0 auto;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+  /* ================= SNOW ================= */
+  canvas#snow{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
 
-        .hero-wrapper {
-            background: rgba(255, 255, 255, 0.82);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(28, 46, 64, 0.08);
-            border-radius: 24px;
-            padding: 60px 50px;
-            box-shadow: 0 20px 50px rgba(30, 77, 123, 0.12);
-            text-align: center;
-            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 800px;
-            width: 100%;
-        }
+  .ground-mist{
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: 18vh;
+    z-index: -2;
+    background: linear-gradient(180deg, transparent, rgba(216,233,245,0.18));
+    pointer-events: none;
+  }
 
-        .hero-tag {
-            background: rgba(30, 77, 123, 0.08);
-            color: #1e4d7b;
-            padding: 6px 18px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+  /* ================= NAV ================= */
+  nav{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 6vw;
+    background: rgba(3, 11, 24, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .brand{
+    font-family: 'Noto Serif Thai', serif;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.5px;
+    font-size: 1.05rem;
+  }
+  .brand span{ color: var(--gold); font-weight: 400; }
+  .nav-links{ display:flex; gap: 30px; list-style:none; }
+  .nav-links a{
+    color: var(--frost);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.25s;
+  }
+  .nav-links a.current{ color: var(--gold); }
+  .nav-links a::after{
+    content:'';
+    position:absolute; left:0; bottom:0;
+    width:0; height:1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover{ color: var(--white); }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-toggle{ display:none; background:none; border:none; color:var(--white); font-size:1.6rem; cursor:pointer; z-index:60; }
 
-        .hero-title {
-            font-size: 48px;
-            font-weight: 800;
-            line-height: 1.3;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #1e4d7b 0%, #3a7bd5 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+  /* ================= HERO ================= */
+  .hero{
+    min-height: 100vh;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 140px 6vw 60px;
+    position: relative;
+  }
+  .eyebrow{
+    color: var(--gold);
+    font-size: 0.78rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
 
-        .hero-subtitle {
-            font-size: 20px;
-            color: #3a5169;
-            font-weight: 500;
-            margin-bottom: 25px;
-        }
+  .portrait-wrap{
+    display:flex;
+    justify-content:center;
+    margin-bottom: 32px;
+  }
+  .portrait-frame{
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    padding: 6px;
+    background: linear-gradient(135deg, var(--gold), var(--steel), var(--frost));
+    box-shadow: 0 0 40px rgba(243,227,184,0.3), 0 20px 50px rgba(0,0,0,0.45);
+    animation: framePulse 5s ease-in-out infinite;
+  }
+  @keyframes framePulse{
+    0%,100%{ box-shadow: 0 0 40px rgba(243,227,184,0.3), 0 20px 50px rgba(0,0,0,0.45); }
+    50%{ box-shadow: 0 0 60px rgba(243,227,184,0.5), 0 20px 55px rgba(0,0,0,0.5); }
+  }
+  .portrait-frame img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    background: rgba(216,233,245,0.12);
+  }
+  .hero h1{
+    font-family: 'Noto Serif Thai', serif;
+    font-weight: 700;
+    color: var(--white);
+    font-size: clamp(2.3rem, 6vw, 4.4rem);
+    line-height: 1.28;
+    max-width: 920px;
+    text-shadow: 0 6px 40px rgba(0,0,0,0.5);
+  }
+  .hero h1 em{ font-style: normal; color: var(--gold); }
+  .hero p.sub{
+    margin-top: 22px;
+    color: var(--silver);
+    font-size: 1.02rem;
+    max-width: 560px;
+    line-height: 1.9;
+  }
+  .hero-actions{
+    margin-top: 42px;
+    display:flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn{
+    padding: 14px 34px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+    display:inline-block;
+  }
+  .btn-primary{ background: var(--gold); color: var(--night-top); }
+  .btn-primary:hover{ transform: translateY(-3px); box-shadow: 0 14px 34px rgba(243,227,184,0.3); }
+  .btn-ghost{ border: 1px solid rgba(255,255,255,0.45); color: var(--white); }
+  .btn-ghost:hover{ background: rgba(255,255,255,0.1); transform: translateY(-3px); }
 
-        .hero-description {
-            font-size: 16px;
-            color: #5b6b7c;
-            line-height: 1.7;
-            max-width: 600px;
-            margin: 0 auto 40px auto;
-        }
+  .scroll-cue{
+    position: absolute;
+    bottom: 28px;
+    color: var(--frost);
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    gap:8px;
+    opacity: 0.75;
+    animation: floatCue 2.6s ease-in-out infinite;
+  }
+  .scroll-cue::after{ content:''; width:1px; height:32px; background: linear-gradient(var(--frost), transparent); }
+  @keyframes floatCue{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(8px);} }
 
-        /* --- ปุ่มนำทางตกแต่งพิเศษ (Premium Navigation Buttons) --- */
-        .btn-group {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+  /* ================= EXPLORE GRID ================= */
+  .explore{
+    position: relative;
+    z-index: 1;
+    padding: 40px 6vw 130px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .explore-head{ text-align:center; margin-bottom: 48px; }
+  .explore-head .section-tag{
+    font-size: 0.76rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); font-weight: 600; margin-bottom: 12px;
+  }
+  .explore-head h2{
+    font-family: 'Noto Serif Thai', serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--white);
+  }
+  .explore-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 22px;
+  }
+  .explore-card{
+    display:block;
+    text-decoration:none;
+    padding: 30px 26px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  }
+  .explore-card:hover{
+    transform: translateY(-6px);
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(243,227,184,0.5);
+  }
+  .explore-num{ font-size: 0.75rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 14px; display:block; }
+  .explore-card h3{
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .explore-card p{ font-size: 0.86rem; color: var(--silver); line-height: 1.75; }
+  .explore-arrow{ margin-top: 16px; font-size: 0.82rem; color: var(--gold); }
 
-        .btn {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 35px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-            overflow: hidden;
-        }
+  footer.site-end{
+    position: relative;
+    z-index: 1;
+    text-align:center;
+    padding: 30px 6vw 50px;
+    font-size: 0.76rem;
+    color: rgba(216,233,245,0.5);
+    letter-spacing: 0.5px;
+  }
 
-        /* ปุ่มหลัก (Primary Button) - ตกแต่งแสงวิ่งผ่าน */
-        .btn-premium-primary {
-            background: linear-gradient(135deg, #1e4d7b 0%, #2a649c 100%);
-            color: #ffffff;
-            box-shadow: 0 8px 25px rgba(30, 77, 123, 0.25);
-            border: none;
-        }
+  @media (max-width: 860px){
+    .nav-links{
+      position: fixed; top:0; right:0; height:100vh; width:70vw;
+      background: rgba(3,11,24,0.97);
+      flex-direction: column; justify-content:center; align-items:flex-start;
+      padding: 40px; gap: 26px;
+      transform: translateX(100%);
+      transition: transform 0.35s ease;
+    }
+    .nav-links.open{ transform: translateX(0); }
+    .nav-toggle{ display:block; }
+    .moon{ width: 90px; height: 90px; top: 8%; right: 8%; }
+  }
 
-        /* เอฟเฟกต์แสงวิบวับวิ่งข้ามปุ่ม */
-        .btn-premium-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -150%;
-            width: 120%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.25),
-                transparent
-            );
-            transform: skewX(-30deg);
-            transition: 0.75s;
-        }
-
-        .btn-premium-primary:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(30, 77, 123, 0.35);
-            background: linear-gradient(135deg, #163a5f 0%, #1f4f80 100%);
-        }
-
-        .btn-premium-primary:hover::before {
-            left: 150%;
-        }
-
-        /* ปุ่มรอง (Secondary Button) - สไตล์โปร่งแสงหรูหรา */
-        .btn-premium-secondary {
-            background: rgba(255, 255, 255, 0.6);
-            color: #1e4d7b;
-            border: 1.5px solid rgba(30, 77, 123, 0.35);
-            backdrop-filter: blur(5px);
-        }
-
-        .btn-premium-secondary:hover {
-            transform: translateY(-4px);
-            background: rgba(30, 77, 123, 0.05);
-            border-color: #1e4d7b;
-            box-shadow: 0 10px 20px rgba(30, 77, 123, 0.1);
-        }
-
-        .btn i {
-            transition: 0.3s;
-        }
-
-        .btn-premium-primary:hover i {
-            transform: translateX(5px); /* ลูกศรขยับไปข้างหน้าเมื่อ Hover */
-        }
-
-        .btn-premium-secondary:hover i {
-            transform: translateY(2px); /* ไอคอนจดหมายขยับเล็กน้อย */
-        }
-
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(40px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
-            .skyscraper-bg {
-                height: 55vh;
-            }
-            .premium-symbol {
-                display: none; /* ปิดไอคอนเพื่อความสบายตาบนจอเล็ก */
-            }
-            .hero-wrapper {
-                padding: 40px 20px;
-                margin-top: 80px;
-            }
-            .hero-title {
-                font-size: 32px;
-            }
-            .hero-subtitle {
-                font-size: 18px;
-            }
-            .btn-group {
-                flex-direction: column;
-                width: 100%;
-            }
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+  ::selection{ background: var(--steel); color: var(--white); }
+</style>
 </head>
 <body>
 
-    <!-- เลเยอร์ที่ 1: ตึกระฟ้าขนาดยักษ์อยู่กับที่ด้านหลังสุด -->
-    <div class="skyscraper-bg"></div>
+<div class="sky"></div>
+<div class="stars"></div>
+<div class="moon"></div>
 
-    <!-- เลเยอร์ที่ 2: สัญลักษณ์การเงินหรูหรา หมุนรอบตัวเองแบบ 3D ด้วย CSS -->
-    <div class="premium-symbol sym-1">฿</div>
-    <div class="premium-symbol sym-2">📈</div>
-    <div class="premium-symbol sym-3">$</div>
-    <div class="premium-symbol sym-4">🪙</div>
-    <div class="premium-symbol sym-5">📊</div>
+<div class="skyline" id="skyline">
+  <div class="layer layer-far" id="layerFar"></div>
+  <div class="layer layer-mid" id="layerMid"></div>
+  <div class="layer layer-near" id="layerNear"></div>
+</div>
 
-    <!-- เลเยอร์ที่ 3: ระบบหิมะ/ละอองแสง ตกจากฟ้าลงล่างอย่างนุ่มนวล -->
-    <canvas id="snow-canvas"></canvas>
+<div class="ground-mist"></div>
+<canvas id="snow"></canvas>
 
-    <nav>
-        <div class="logo">Business Portfolio</div>
-        <ul class="nav-links">
-            <li><a href="index.html" class="active">หน้าแรก</a></li>
-            <li><a href="personal.html">ประวัติส่วนตัว</a></li>
-            <li><a href="education.html">ประวัติการศึกษา</a></li>
-            <li><a href="activities.html">กิจกรรม/ผลงาน</a></li>
-            <li><a href="contact.html">ช่องทางติดต่อ</a></li>
-        </ul>
-    </nav>
+<nav>
+  <div class="brand">พอร์ตโฟลิโอ<span> · Business Admin</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="current">หน้าแรก</a></li>
+    <li><a href="about.html">เกี่ยวกับฉัน</a></li>
+    <li><a href="education.html">การศึกษา</a></li>
+    <li><a href="works.html">ผลงาน</a></li>
+    <li><a href="contact.html">ติดต่อ</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="เปิดเมนู">☰</button>
+</nav>
 
-    <div class="container">
-        <div class="hero-wrapper">
-            <span class="hero-tag">Welcome to my portfolio</span>
-            <h1 class="hero-title">คณะบริหารธุรกิจ</h1>
-            <p class="hero-subtitle">มุ่งมั่นพัฒนาทักษะการจัดการและการตลาดสู่อนาคต</p>
-            <p class="hero-description">
-                ยินดีต้อนรับเข้าสู่แฟ้มสะสมผลงานออนไลน์ แหล่งรวบรวมทักษะ ความรู้เชิงลึก 
-                และกิจกรรมสร้างสรรค์ด้านธุรกิจของผมที่พร้อมจะนำไปต่อยอดและพัฒนาเพื่อความสำเร็จในระดับสากล
-            </p>
-            
-            <!-- ปุ่มนำทางที่เพิ่มและตกแต่งพิเศษ -->
-            <div class="btn-group">
-                <a href="personal.html" class="btn btn-premium-primary">
-                    เริ่มต้นสำรวจพอร์ต <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
-                </a>
-                <a href="contact.html" class="btn btn-premium-secondary">
-                    <i class="far fa-envelope" style="margin-right: 10px;"></i> ติดต่อฉัน
-                </a>
-            </div>
-        </div>
+<header class="hero">
+  <div class="eyebrow">Portfolio · TCAS Admissions · Bangkok</div>
+  <div class="portrait-wrap">
+    <div class="portrait-frame">
+      <!-- แทนที่ src ด้วยรูปของคุณเอง เช่น "photo.jpg" (วางไฟล์รูปไว้โฟลเดอร์เดียวกับ index.html) -->
+      <img src="photo.jpg" alt="รูปภาพของ [ชื่อ-นามสกุล]"
+           onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%23163A63%22/%3E%3Ccircle cx=%2250%22 cy=%2238%22 r=%2018%22 fill=%22%23D8E9F5%22/%3E%3Cpath d=%22M18 92c0-20 14-34 32-34s32 14 32 34%22 fill=%22%23D8E9F5%22/%3E%3C/svg%3E';">
     </div>
+  </div>
+  <h1>สวัสดีค่ะ ดิฉันชื่อ <em>[ชื่อ-นามสกุล]</em><br>นักเรียนชั้นมัธยมศึกษาปีที่ 6</h1>
+  <p class="sub">มุ่งมั่นสู่เส้นทาง <strong>คณะบริหารธุรกิจ</strong> เติบโตท่ามกลางจังหวะเมืองที่ไม่เคยหลับใหล พร้อมสร้างคุณค่าให้ธุรกิจในโลกที่เปลี่ยนแปลงอยู่เสมอ</p>
+  <div class="hero-actions">
+    <a href="about.html" class="btn btn-primary">รู้จักฉันให้มากขึ้น</a>
+    <a href="works.html" class="btn btn-ghost">ดูผลงานของฉัน</a>
+  </div>
+  <div class="scroll-cue">เลื่อนลง</div>
+</header>
 
-    <!-- Script หิมะ/ละอองแสง ตกนุ่ม ๆ แบบหน้ากิจกรรม -->
-    <script>
-        const canvas = document.getElementById('snow-canvas');
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
+<section class="explore">
+  <div class="explore-head">
+    <div class="section-tag">Explore</div>
+    <h2>สำรวจพอร์ตโฟลิโอทั้งหมด</h2>
+  </div>
+  <div class="explore-grid">
+    <a href="about.html" class="explore-card">
+      <span class="explore-num">01</span>
+      <h3>เกี่ยวกับฉัน</h3>
+      <p>ตัวตน แนวคิด และแรงบันดาลใจสู่เส้นทางบริหารธุรกิจ</p>
+      <span class="explore-arrow">ไปหน้านี้ →</span>
+    </a>
+    <a href="education.html" class="explore-card">
+      <span class="explore-num">02</span>
+      <h3>การศึกษา</h3>
+      <p>เส้นทางการเรียนรู้และกิจกรรมที่หล่อหลอมความเป็นผู้นำ</p>
+      <span class="explore-arrow">ไปหน้านี้ →</span>
+    </a>
+    <a href="works.html" class="explore-card">
+      <span class="explore-num">03</span>
+      <h3>ผลงาน</h3>
+      <p>โครงการ แผนธุรกิจ และรางวัลที่ภาคภูมิใจ</p>
+      <span class="explore-arrow">ไปหน้านี้ →</span>
+    </a>
+    <a href="contact.html" class="explore-card">
+      <span class="explore-num">04</span>
+      <h3>ติดต่อฉัน</h3>
+      <p>ช่องทางการติดต่อสำหรับข้อมูลเพิ่มเติม</p>
+      <span class="explore-arrow">ไปหน้านี้ →</span>
+    </a>
+  </div>
+</section>
 
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
+<footer class="site-end">© 2569 [ชื่อ-นามสกุล] · พอร์ตโฟลิโอสำหรับสมัครเข้าศึกษาคณะบริหารธุรกิจ</footer>
 
-        const numFlakes = 50; 
-        const flakes = [];
+<script>
+  // ---------- Mobile nav toggle ----------
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 
-        for (let i = 0; i < numFlakes; i++) {
-            flakes.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                r: Math.random() * 2.5 + 1,
-                speedY: Math.random() * 0.8 + 0.3, 
-                speedX: Math.random() * 0.4 - 0.2,
-                opacity: Math.random() * 0.3 + 0.1
-            });
-        }
+  // ---------- Build Bangkok-inspired skyline ----------
+  const palette = ['#0B2545', '#13315C', '#163A63', '#1C4570'];
+  const neonColors = ['#7CE7FF', '#FF7FBF', '#FFC46B', '#9B8CFF', '#6BFFC4'];
 
-        function draw() {
-            ctx.clearRect(0, 0, width, height);
-            
-            for (let i = 0; i < numFlakes; i++) {
-                const f = flakes[i];
-                
-                ctx.beginPath();
-                ctx.fillStyle = `rgba(30, 77, 123, ${f.opacity})`;
-                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
-                ctx.fill();
+  function addNeon(b, h){
+    const kind = Math.random();
+    const el = document.createElement('div');
+    const color = neonColors[Math.floor(Math.random() * neonColors.length)];
+    const delay = (Math.random() * 3).toFixed(2) + 's';
+    el.style.setProperty('--nc', color);
+    el.style.setProperty('--nd', delay);
+    if(kind < 0.4){
+      el.className = 'neon-stripe ' + (Math.random() < 0.5 ? 'left' : 'right');
+    } else if(kind < 0.75){
+      el.className = 'neon-band';
+      el.style.top = (30 + Math.random() * 40) + '%';
+    } else {
+      el.className = 'neon-sign';
+      el.style.top = (14 + Math.random() * 10) + '%';
+    }
+    b.appendChild(el);
+  }
 
-                f.y += f.speedY;
-                f.x += f.speedX;
+  function makeBuilding({ w, h, color, notch, spire, windowOpacity, neon }){
+    const b = document.createElement('div');
+    b.className = 'bldg';
+    b.style.width = w + 'px';
+    b.style.height = h + 'px';
+    b.style.setProperty('--bc', color);
+    b.style.setProperty('--wo', windowOpacity);
+    b.style.setProperty('--fd', (Math.random() * 5).toFixed(2) + 's');
+    if(notch){
+      // Mahanakhon-inspired pixel notch silhouette
+      b.style.clipPath = 'polygon(0 0, 100% 0, 100% 62%, 70% 62%, 70% 74%, 100% 74%, 100% 100%, 0 100%)';
+    }
+    if(spire){
+      const s = document.createElement('div');
+      s.className = 'spire';
+      s.style.height = (h * 0.28) + 'px';
+      s.style.setProperty('--bc', color);
+      b.appendChild(s);
+    }
+    if(neon) addNeon(b, h);
+    return b;
+  }
 
-                if (f.y > height) {
-                    f.y = -10;
-                    f.x = Math.random() * width;
-                }
-            }
-            requestAnimationFrame(draw);
-        }
-        draw();
-    </script>
+  function buildLayer(container, { count, minW, maxW, minH, maxH, colorIdx, windowOpacity, notchChance, spireChance, neonChance }){
+    const frag = document.createDocumentFragment();
+    for(let i = 0; i < count; i++){
+      const w = minW + Math.random() * (maxW - minW);
+      const h = minH + Math.random() * (maxH - minH);
+      const color = palette[colorIdx];
+      const notch = Math.random() < notchChance;
+      const spire = Math.random() < spireChance;
+      const neon = Math.random() < neonChance;
+      frag.appendChild(makeBuilding({ w, h, color, notch, spire, windowOpacity, neon }));
+    }
+    container.appendChild(frag);
+  }
+
+  const layerFar = document.getElementById('layerFar');
+  const layerMid = document.getElementById('layerMid');
+  const layerNear = document.getElementById('layerNear');
+
+  buildLayer(layerFar, { count: 16, minW: 30, maxW: 60, minH: 90, maxH: 220, colorIdx: 0, windowOpacity: 0.25, notchChance: 0.08, spireChance: 0.15, neonChance: 0.1 });
+  buildLayer(layerMid, { count: 13, minW: 40, maxW: 85, minH: 140, maxH: 320, colorIdx: 1, windowOpacity: 0.4, notchChance: 0.15, spireChance: 0.2, neonChance: 0.3 });
+  buildLayer(layerNear, { count: 10, minW: 55, maxW: 110, minH: 200, maxH: 420, colorIdx: 2, windowOpacity: 0.55, notchChance: 0.2, spireChance: 0.25, neonChance: 0.45 });
+
+  // ---------- Parallax on pointer move ----------
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!prefersReducedMotion){
+    window.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5);
+      layerFar.style.transform = `translateX(${x * 10}px)`;
+      layerMid.style.transform = `translateX(${x * 22}px)`;
+      layerNear.style.transform = `translateX(${x * 38}px)`;
+    });
+  }
+
+  // ---------- Falling snow ----------
+  const canvas = document.getElementById('snow');
+  const ctx = canvas.getContext('2d');
+  let W, H, flakes;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function makeFlakes(count){
+    return Array.from({ length: count }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 2.6 + 1,
+      speedY: Math.random() * 0.9 + 0.4,
+      speedX: Math.random() * 0.6 - 0.3,
+      drift: Math.random() * Math.PI * 2,
+      opacity: Math.random() * 0.5 + 0.4
+    }));
+  }
+
+  const FLAKE_COUNT = window.innerWidth < 700 ? 70 : 140;
+  flakes = makeFlakes(FLAKE_COUNT);
+
+  function drawSnow(){
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#FFFFFF';
+    for(const f of flakes){
+      ctx.globalAlpha = f.opacity;
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      f.y += f.speedY;
+      f.drift += 0.01;
+      f.x += f.speedX + Math.sin(f.drift) * 0.3;
+
+      if(f.y > H + 5){ f.y = -5; f.x = Math.random() * W; }
+      if(f.x > W + 5) f.x = -5;
+      if(f.x < -5) f.x = W + 5;
+    }
+    ctx.globalAlpha = 1;
+    if(!prefersReducedMotion) requestAnimationFrame(drawSnow);
+  }
+  drawSnow();
+</script>
+
 </body>
 </html>
