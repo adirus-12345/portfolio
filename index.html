@@ -297,30 +297,45 @@
     max-width: 900px;
   }
 
-  /* ปรับกรอบรูปภาพวงกลมให้ใหญ่ขึ้นและเด่นชัด */
-  .profile-frame{
-    width: 180px;
-    height: 180px;
+    /* ================= PROFILE FRAME (ดีไซน์ใหม่ ใหญ่และสมดุลขึ้น) ================= */
+  .profile-frame {
+    width: 220px;  /* ขยายขนาดให้ใหญ่ขึ้นนิดนึง */
+    height: 220px;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.15), rgba(58,110,165,0.3));
-    border: 3px solid var(--frost);
-    box-shadow: 0 0 40px rgba(216,233,245,0.25), inset 0 0 20px rgba(255,255,255,0.1);
-    margin-bottom: 24px;
-    overflow: hidden;
+    background: rgba(3, 11, 24, 0.3); /* พื้นหลังโปร่งแสงเข้ากับท้องฟ้า */
+    border: 4px solid var(--frost); /* ขอบด้านในสีขาว/ฟ้าอ่อน */
+    outline: 2px solid var(--gold); /* ขอบซ้อนด้านนอกสีทองบางๆ */
+    outline-offset: 6px; /* ระยะห่างระหว่างขอบในและขอบนอก ให้ดูมีมิติ */
+    box-shadow: 
+      0 15px 35px rgba(0, 0, 0, 0.5), 
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+    margin-bottom: 40px; /* เพิ่มระยะห่างจากตัวหนังสือให้ดูโปร่งและสมดุล */
+    /* อย่าลืมตั้ง position: relative ถ้าจะแก้เรื่อง z-index ในอนาคต */
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
   }
-  .profile-frame:hover{
-    transform: scale(1.05);
+
+  /* ลูกเล่นตอนเอาเมาส์ชี้ (Hover) กรอบจะลอยขึ้นและเรืองแสง */
+  .profile-frame:hover {
+    transform: translateY(-5px);
+    outline-color: #FFFFFF;
+    box-shadow: 
+      0 20px 45px rgba(0, 0, 0, 0.6), 
+      0 0 20px rgba(243, 227, 184, 0.4),
+      inset 0 0 25px rgba(255, 255, 255, 0.2);
   }
-  /* สำหรับใส่รูปภาพจริง เช่น <img src="profile.jpg" alt="Profile"> */
-  .profile-frame img{
+  
+  /* สำหรับใส่รูปภาพจริง ให้รูปพอดีกับกรอบเป๊ะๆ */
+  .profile-frame img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 50%; /* บังคับให้รูปกลมตามกรอบ */
   }
+
 
   /* ปรับขนาดตัวหนังสือให้เล็กลง กระชับ และสมดุลขึ้น */
   .hero-wrapper h1{
